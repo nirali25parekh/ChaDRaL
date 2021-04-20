@@ -1,0 +1,5 @@
+the strength of encryption lies not only in the complexity of the encryption algorithm, but also in the strength, randomness and complexity of the key
+
+
+
+even minor change in the initial condition or control parameter, drastic change in output is observed. property of chaos. This property is desirable for generating strong crypto key for an encryption process.
