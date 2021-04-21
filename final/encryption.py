@@ -1,25 +1,22 @@
 # https://github.com/tafseerahmed/image-Encryption-dna-encoding/blob/master/encr.py
 # Aim: create a image encryption program using Dna encoding and chaos map
 
-from PIL import Image
-import hashlib 
-import binascii
-
 import cv2
 import numpy as np
-
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 import sys
-from importlib import reload  
-from bisect import bisect_left as bsearch
 
+sys.path.append('../stegano/')
+# steg
+from stegano import lsb
+
+print("imported")
 # import helpers
 from dna_helpers import dna_encode, dna_decode, key_matrix_dna_encode, xor_operation_encrypt
 from image_helpers import split_into_rgb_channels, decompose_matrix
 from user_input_helpers import key_input_from_user, image_input_from_user
 from lorenz_helpers import plot, gen_chaos_seq, update_lorenz, sequence_indexing
 from key_helpers import securekey
+from rsa_helpers import encrypt_using_rsa, decrypt_using_rsa
 
 
 # scramble the blue, green, red arrays wrt fx,fy and fz
@@ -95,6 +92,25 @@ if (__name__ == "__main__"):
     print(file_path)
     key = key_input_from_user()
 
+    #!rsa
+    rsa_encrypted_key = encrypt_using_rsa(key)
+    print("rsa_encrypted_key", len(rsa_encrypted_key))
+
+    # utf_rsa_crypto = rsa_encrypted_key.decode('cp1251').encode('utf8')
+
+    
+    
+    # try decrypting rsa
+    # rsa_decrypted = decrypt_using_rsa(rsa_encrypted_key)
+    # print("decrypted from crypto", rsa_decrypted)
+
+    #! steganography
+    secret = lsb.hide("./lena.png", rsa_encrypted_key)
+    secret.save("./lena_stego.png")
+    print("stego lena saved!")
+    stego_revealed_message = lsb.reveal("./lena_stego.png")
+    print("stego rsa_encrypted_key", len(stego_revealed_message))
+    
     #! disintegrate image
     
     # image converted to three matrices of R, G, B colors

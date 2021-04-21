@@ -7,6 +7,7 @@ from image_helpers import split_into_rgb_channels, decompose_matrix
 from user_input_helpers import key_input_from_user, image_input_from_user
 from key_helpers import securekey
 from lorenz_helpers import gen_chaos_seq, update_lorenz, sequence_indexing
+from rsa_helpers import decrypt_using_rsa
 
 def scramble_decrypt(fx,fy,fz,b,g,r):
     p,q=b.shape
@@ -70,6 +71,11 @@ if (__name__ == "__main__"):
 
     #! user input stuff
 
+    # crypto = input("enter crypto")
+    # print(type(crypto))
+    # crypto = bytes(crypto, 'utf-8')
+    # key = decrypt_using_rsa(crypto)
+    # print("in decryption, key is", key)
     file_path = image_input_from_user()
     key = key_input_from_user()
 
