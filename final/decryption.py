@@ -1,5 +1,9 @@
 import numpy as np
 import cv2
+import sys
+sys.path.append('../stegano/')
+# steg
+from stegano import lsb
 
 # import helpers
 from dna_helpers import dna_encode, dna_decode, key_matrix_dna_encode, xor_operation_decrypt
@@ -65,19 +69,34 @@ def decrypt(fx,fy,fz,file_path,Mk):
     img[:,:,1] = green
     img[:,:,2] = blue
     # save the file
-    cv2.imwrite(("recovered_"+file_path[:-4]+".jpg"), img)
+    cv2.imwrite((file_path[:-10]+"_recovered.png"), img)
 
 if (__name__ == "__main__"):
 
     #! user input stuff
+    stego_image_file_name = image_input_from_user()
+    file_path = stego_image_file_name
 
+    stego_revealed_message = lsb.reveal(stego_image_file_name)
+
+    # print("-------stego_revealed_message----")
+    # print(type(stego_revealed_message))
+    # print(stego_revealed_message)       # str
+
+    stego_reveal_in_bytes = bytes.fromhex(stego_revealed_message) #bytes
+    
+    # try decrypting rsa
+    rsa_decrypted = decrypt_using_rsa(stego_reveal_in_bytes)
+    # print("decrypted from crypto", rsa_decrypted)   # should return the key 123
+    
+    key = rsa_decrypted
     # crypto = input("enter crypto")
     # print(type(crypto))
     # crypto = bytes(crypto, 'utf-8')
     # key = decrypt_using_rsa(crypto)
     # print("in decryption, key is", key)
-    file_path = image_input_from_user()
-    key = key_input_from_user()
+    
+    # key = key_input_from_user()
 
     #! disintegrate image
     
@@ -106,4 +125,5 @@ if (__name__ == "__main__"):
     #! decryption
 
     print("decrypting...")
+    print()
     decrypt(fx,fy,fz,file_path,Mk_e)

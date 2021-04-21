@@ -77,11 +77,6 @@ def recover_image(b,g,r,iname):
     img[:,:,2] = r
     img[:,:,1] = g
     img[:,:,0] = b
-    cv2.imwrite(("encrypt_"+iname[:-4]+".png"), img)
-    print("saved ecrypted image as encrypt_"+iname[:-4]+".png")
-
-    # readed = cv2.imread("encrypt_"+iname[:-4]+".png")
-    # print('readed', readed)
     return img
     
 if (__name__ == "__main__"):
@@ -93,23 +88,7 @@ if (__name__ == "__main__"):
     key = key_input_from_user()
 
     #!rsa
-    rsa_encrypted_key = encrypt_using_rsa(key)
-    print("rsa_encrypted_key", len(rsa_encrypted_key))
-
-    # utf_rsa_crypto = rsa_encrypted_key.decode('cp1251').encode('utf8')
-
-    
-    
-    # try decrypting rsa
-    # rsa_decrypted = decrypt_using_rsa(rsa_encrypted_key)
-    # print("decrypted from crypto", rsa_decrypted)
-
-    #! steganography
-    secret = lsb.hide("./lena.png", rsa_encrypted_key)
-    secret.save("./lena_stego.png")
-    print("stego lena saved!")
-    stego_revealed_message = lsb.reveal("./lena_stego.png")
-    print("stego rsa_encrypted_key", len(stego_revealed_message))
+    rsa_encrypted_key = encrypt_using_rsa(key)    
     
     #! disintegrate image
     
@@ -152,5 +131,19 @@ if (__name__ == "__main__"):
 
     # read the image and then replace the bits with the new encrypted ones
     # saves the image as "enc_<image>.jpg"
-    encrypted_img=recover_image(b,g,r,file_path)
-    # print('in encryption', encrypted_img.shape)
+    encrypted_img = recover_image(b,g,r,file_path)
+    
+
+    encrypted_image_file_name = file_path[:-4]+"_encrypt.png"
+    cv2.imwrite(encrypted_image_file_name, encrypted_img)
+    print("saved ecrypted image as", encrypted_image_file_name)
+    #! encrypted image saved
+
+    # rsa_encrypted_key is bytes
+    hex_of_rsa_encrypted_key = rsa_encrypted_key.hex()      # str
+    # print("hex_of_rsa_encrypted_key-----", hex_of_rsa_encrypted_key)
+    stego_img = lsb.hide(encrypted_image_file_name, hex_of_rsa_encrypted_key)
+    stego_image_file_name = file_path[:-4]+"_stego.png"
+    stego_img.save(stego_image_file_name)
+    print("saved stego image as: ", stego_image_file_name)
+    #! stego image saved   
