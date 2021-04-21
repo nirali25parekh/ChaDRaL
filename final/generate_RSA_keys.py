@@ -1,7 +1,7 @@
 import rsa
 
 # A's keys
-(A_pub, A_priv) = rsa.newkeys(512)
+(A_pub, A_priv) = rsa.newkeys(128)
 
 A_pub_file = open("A_public_key.txt","w")
 A_pub_file.write(A_pub.save_pkcs1().decode('utf-8'))
