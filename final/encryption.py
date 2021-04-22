@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import sys
 
+import time
+
 sys.path.append('../stegano/')
 # steg
 from stegano import lsb
@@ -88,9 +90,14 @@ if (__name__ == "__main__"):
     key = key_input_from_user()
 
     #!rsa
-    rsa_encrypted_key = encrypt_using_rsa(key)    
+    start_rsa_encryption = time.time()
+    rsa_encrypted_key = encrypt_using_rsa(key)  
+    end_rsa_encryption = time.time()  
     
+    print("time to rsa encrypt key: ", end_rsa_encryption - start_rsa_encryption)
     #! disintegrate image
+
+    start_image_encryption = time.time()
     
     # image converted to three matrices of R, G, B colors
     blue,green,red=decompose_matrix(file_path)
@@ -132,6 +139,9 @@ if (__name__ == "__main__"):
     # read the image and then replace the bits with the new encrypted ones
     # saves the image as "enc_<image>.jpg"
     encrypted_img = recover_image(b,g,r,file_path)
+    end_image_encryption = time.time()
+
+    print("time to encrypt image: ", end_image_encryption - start_image_encryption)
     
 
     encrypted_image_file_name = file_path[:-4]+"_encrypt.png"
@@ -142,7 +152,10 @@ if (__name__ == "__main__"):
     # rsa_encrypted_key is bytes
     hex_of_rsa_encrypted_key = rsa_encrypted_key.hex()      # str
     # print("hex_of_rsa_encrypted_key-----", hex_of_rsa_encrypted_key)
+    start_stego_encrypt = time.time()
     stego_img = lsb.hide(encrypted_image_file_name, hex_of_rsa_encrypted_key)
+    end_stego_encrypt = time.time()
+    print("time to hide key in stego ", end_stego_encrypt - start_stego_encrypt)
     stego_image_file_name = file_path[:-4]+"_stego.png"
     stego_img.save(stego_image_file_name)
     print("saved stego image as: ", stego_image_file_name)

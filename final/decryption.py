@@ -5,6 +5,8 @@ sys.path.append('../stegano/')
 # steg
 from stegano import lsb
 
+import time
+
 # import helpers
 from dna_helpers import dna_encode, dna_decode, key_matrix_dna_encode, xor_operation_decrypt
 from image_helpers import split_into_rgb_channels, decompose_matrix
@@ -77,28 +79,24 @@ if (__name__ == "__main__"):
     stego_image_file_name = image_input_from_user()
     file_path = stego_image_file_name
 
+    start_stego_reveal = time.time()
     stego_revealed_message = lsb.reveal(stego_image_file_name)
+    end_stego_reveal = time.time()
+    print("time to reveal stego: ", end_stego_reveal - start_stego_reveal)
 
-    # print("-------stego_revealed_message----")
-    # print(type(stego_revealed_message))
-    # print(stego_revealed_message)       # str
 
     stego_reveal_in_bytes = bytes.fromhex(stego_revealed_message) #bytes
     
-    # try decrypting rsa
+    start_rsa_decrypt = time.time()
     rsa_decrypted = decrypt_using_rsa(stego_reveal_in_bytes)
-    # print("decrypted from crypto", rsa_decrypted)   # should return the key 123
+    end_rsa_decrypt = time.time()
+    print("time to decrypt rsa key: ", end_rsa_decrypt - start_rsa_decrypt)
     
     key = rsa_decrypted
-    # crypto = input("enter crypto")
-    # print(type(crypto))
-    # crypto = bytes(crypto, 'utf-8')
-    # key = decrypt_using_rsa(crypto)
-    # print("in decryption, key is", key)
-    
-    # key = key_input_from_user()
 
     #! disintegrate image
+
+    start_image_decrypt = time.time()
     
     # image converted to three matrices of R, G, B colors
     blue,green,red=decompose_matrix(file_path)
@@ -125,5 +123,9 @@ if (__name__ == "__main__"):
     #! decryption
 
     print("decrypting...")
-    print()
     decrypt(fx,fy,fz,file_path,Mk_e)
+    
+    end_image_decrypt = time.time()
+    print("time to decrypt image: ", end_image_decrypt - start_image_decrypt)
+    
+    print("saved as "+file_path[:-10]+"_recovered.png")
