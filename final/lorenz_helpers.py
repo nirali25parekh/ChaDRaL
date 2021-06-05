@@ -2,6 +2,7 @@ import textwrap
 import numpy as np
 from scipy.integrate import odeint
 from bisect import bisect_left as bsearch
+import matplotlib.pyplot as plt
 
 # Global constants
 
@@ -75,7 +76,7 @@ def plot(x,y,z):
     s = 100
     c = np.linspace(0,1,N)
     for i in range(0,N-s,s):
-        ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=(1-c[i],c[i],1), alpha=0.4)
+        ax.plot(x[i:i+s+1], y[i:i+s+1], z[i:i+s+1], color=(1-c[i],c[i],1), alpha=0.8)
     plt.show()
 
 # generates the lorenz chaotic sequence
