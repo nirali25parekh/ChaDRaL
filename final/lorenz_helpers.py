@@ -152,4 +152,3 @@ def sequence_indexing(x,y,z):
         fz[k1]=k2
     #// fx = [471655 471686 471717 ... 532089 532144 532200] 
     return fx,fy,fz
-        

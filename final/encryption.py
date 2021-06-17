@@ -110,6 +110,7 @@ if (__name__ == "__main__"):
     # encode key matrix using chaos of blue matrix, DNA encoding -> @returns DNA encoded key matrix
     Mk_e = key_matrix_dna_encode(key,blue)
 
+    print("MK_E shape", Mk_e.shape)
     #! Lorrenz stuff
     # to generate the x0, y0, and z0 randomly using key
     update_lorenz(key)
