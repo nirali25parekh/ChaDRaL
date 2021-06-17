@@ -1,0 +1,10 @@
+stuff remaining in image encryption paper:
+
+diffusion confsion conceot
+key space analysis
+key sensitivity test
+
+discussions
+future scope
+
+add more images
